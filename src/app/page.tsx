@@ -1,7 +1,9 @@
+import ProductTable from '@/components/product-table';
+
 export default function Home() {
   return (
-    <div>
-      <h1>Hello world</h1>
-    </div>
+    <main>
+      <ProductTable />
+    </main>
   );
 }
