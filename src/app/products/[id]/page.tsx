@@ -2,16 +2,17 @@ import { ProductDetails } from '@/components/product-details';
 import { getProductById } from '@/lib/api';
 import type { Metadata } from 'next';
 
-interface ProductPageProps {
-  params: {
-    id: string;
-  };
-}
+type Params = Promise<{
+  id: string;
+}>;
 
 export async function generateMetadata({
   params,
-}: ProductPageProps): Promise<Metadata> {
-  const product = await getProductById(Number.parseInt(params.id));
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const product = await getProductById(Number.parseInt(resolvedParams.id));
 
   return {
     title: product.title,
@@ -22,8 +23,11 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
-  const product = await getProductById(Number.parseInt(params.id));
+export default async function ProductPage({ params }: { params: Params }) {
+  // Await the params object before accessing its properties
+  const resolvedParams = await params;
+
+  const product = await getProductById(Number.parseInt(resolvedParams.id));
 
   return <ProductDetails product={product} />;
 }
